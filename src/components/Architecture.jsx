@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Newspaper, LineChart, Landmark } from 'lucide-react';
 
 const carouselImages = [
-  "/atas.png",
-  "/agen_a.png",
-  "/agen_b.png",
-  "/agen_c.png"
+  "./atas.png",
+  "./agen_a.png",
+  "./agen_b.png",
+  "./agen_c.png"
 ];
 
 export default function Architecture() {
