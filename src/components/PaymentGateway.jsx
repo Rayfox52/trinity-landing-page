@@ -4,23 +4,27 @@ import { ArrowLeft, CreditCard, Lock, ShieldCheck, CheckCircle2 } from 'lucide-r
 export default function PaymentGateway({ onBack, planName, price }) {
   const [status, setStatus] = useState('idle'); // idle, processing, success
 
+  // Menentukan nama variasi paket untuk Umami (Standard Access vs Full Control)
+  const currentPlan = planName?.includes('Enterprise') || planName?.toLowerCase().includes('full') 
+    ? 'Full Control' 
+    : 'Standard Access';
+
   useEffect(() => {
     // Melacak saat user melihat halaman checkout (memilih paket)
     if (window.umami) {
-      window.umami.track('Plan Selected', {
-        planName: planName || 'Standard Access',
+      window.umami.track(`Plan Selected: ${currentPlan}`, {
+        originalPlanName: planName,
         price: price || '$49'
       });
     }
-  }, [planName, price]);
+  }, [currentPlan, planName, price]);
 
   const handlePay = (e) => {
     e.preventDefault();
     
     // Melacak saat user mencoba membayar paket
     if (window.umami) {
-      window.umami.track('Payment Attempted', {
-        planName: planName || 'Standard Access',
+      window.umami.track(`Payment Attempt: ${currentPlan}`, {
         price: price || '$49'
       });
     }
@@ -31,8 +35,7 @@ export default function PaymentGateway({ onBack, planName, price }) {
       
       // Melacak saat pembayaran berhasil
       if (window.umami) {
-        window.umami.track('Payment Successful', {
-          planName: planName || 'Standard Access',
+        window.umami.track(`Payment Success: ${currentPlan}`, {
           price: price || '$49'
         });
       }
