@@ -1,14 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowLeft, CreditCard, Lock, ShieldCheck, CheckCircle2 } from 'lucide-react';
 
 export default function PaymentGateway({ onBack, planName, price }) {
   const [status, setStatus] = useState('idle'); // idle, processing, success
 
+  useEffect(() => {
+    // Melacak saat user melihat halaman checkout (memilih paket)
+    if (window.umami) {
+      window.umami.track('Plan Selected', {
+        planName: planName || 'Standard Access',
+        price: price || '$49'
+      });
+    }
+  }, [planName, price]);
+
   const handlePay = (e) => {
     e.preventDefault();
+    
+    // Melacak saat user mencoba membayar paket
+    if (window.umami) {
+      window.umami.track('Payment Attempted', {
+        planName: planName || 'Standard Access',
+        price: price || '$49'
+      });
+    }
+
     setStatus('processing');
     setTimeout(() => {
       setStatus('success');
+      
+      // Melacak saat pembayaran berhasil
+      if (window.umami) {
+        window.umami.track('Payment Successful', {
+          planName: planName || 'Standard Access',
+          price: price || '$49'
+        });
+      }
     }, 2000);
   };
 
